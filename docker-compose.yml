@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   openvpn:
     image: kylemanna/openvpn
@@ -9,12 +11,19 @@ services:
     volumes:
       - ./openvpn:/etc/openvpn
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pgrep", "openvpn"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   asterisk:
     image: mlan/asterisk:base
     container_name: asterisk
     depends_on:
-      - openvpn
+      openvpn:
+        condition: service_healthy
     network_mode: "service:openvpn"
     volumes:
       - ./asterisk:/etc/asterisk
