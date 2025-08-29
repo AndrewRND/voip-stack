@@ -1,0 +1,21 @@
+services:
+  openvpn:
+    image: kylemanna/openvpn
+    container_name: openvpn
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "443:1194/tcp"
+    volumes:
+      - ./openvpn:/etc/openvpn
+    restart: unless-stopped
+
+  asterisk:
+    image: mlan/asterisk:base
+    container_name: asterisk
+    depends_on:
+      - openvpn
+    network_mode: "service:openvpn"
+    volumes:
+      - ./asterisk:/etc/asterisk
+    restart: unless-stopped
