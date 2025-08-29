@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# PyCharm project files
+.idea/
+
+# Logs
+*.log
+
+# Docker stuff
+*.pid
+*.sock
+
+# OpenVPN data (ключи и сертификаты, НЕЛЬЗЯ в гит!)
+openvpn/*
+!openvpn/README.md
+
+# Asterisk DB/runtime
+asterisk/*.db
+asterisk/*.sqlite
+asterisk/*.core
