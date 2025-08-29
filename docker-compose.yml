@@ -7,9 +7,9 @@ services:
     devices:
       - /dev/net/tun
     ports:
-      - "443:1194/tcp"              # OpenVPN сервер
+      - "443:1194/tcp"
     volumes:
-      - openvpn-data:/etc/openvpn   # PKI, конфиги
+      - openvpn-data:/etc/openvpn
     restart: unless-stopped
     sysctls:
       net.ipv6.conf.default.forwarding: 1
@@ -28,10 +28,10 @@ services:
     container_name: asterisk
     depends_on:
       openvpn:
-        condition: service_healthy   # ждём пока OpenVPN станет healthy
-    network_mode: "service:openvpn"  # Asterisk доступен только внутри VPN
+        condition: service_healthy
+    network_mode: "service:openvpn"
     volumes:
-      - ./asterisk:/etc/asterisk     # наши конфиги
+      - ./asterisk:/etc/asterisk
     restart: unless-stopped
 
 volumes:

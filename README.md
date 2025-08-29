@@ -18,86 +18,59 @@
 ## 🚀 Установка
 
 ### 1. Подготовка VPS
-```bash
+
 sudo apt update && sudo apt install -y git docker.io docker-compose
 sudo systemctl enable --now docker
+
 2. Клонирование проекта
-bash
-Копировать код
+
 git clone https://github.com/AndrewRND/voip-stack.git
 cd voip-stack
-3. Инициализация OpenVPN
-bash
-Копировать код
-docker volume create openvpn-data
 
+3. Инициализация OpenVPN
+
+docker volume create openvpn-data
 docker run -v openvpn-data:/etc/openvpn --rm kylemanna/openvpn \
   ovpn_genconfig -u tcp://<YOUR_VPS_IP>:443 -2 -C AES-256-CBC -a SHA384
-
 docker run -e EASYRSA_KEY_SIZE=4096 -v openvpn-data:/etc/openvpn --rm -it \
   kylemanna/openvpn ovpn_initpki
+
 4. Запуск
-bash
-Копировать код
+
 docker compose up -d
+
 👥 Управление пользователями
 Создание нового клиента
-bash
-Копировать код
 docker run -e EASYRSA_KEY_SIZE=4096 -v openvpn-data:/etc/openvpn --rm -it \
   kylemanna/openvpn easyrsa build-client-full DEV-V10-005
 
 docker run -v openvpn-data:/etc/openvpn --rm kylemanna/openvpn \
   ovpn_getclient DEV-V10-005 > openvpn/DEV-V10-005.ovpn
+  
 📞 SIP-подключение (Linphone/Zoiper)
-Server: 192.168.255.206:3790
-
-User: 1001 … 1050
-
-Password: 1793
-
+Server: host:3790
 Звонить → набрать номер (например 1002).
 
 🔍 Проверка Asterisk
-bash
-Копировать код
+
 docker exec -it asterisk asterisk -rvvv
 *CLI> pjsip show endpoints
+
 ✅ Итог
 Снаружи открыт только 443/tcp (VPN).
-
 Asterisk доступен только внутри VPN.
-
 Удобное масштабирование (новые клиенты через ovpn_getclient).
-
-yaml
-Копировать код
 
 ---
 
 ## 📌 2. Отправляем в Git
 
-```bash
 cd ~/voip-stack
 echo "README.md" >> .gitignore   # (если не хочешь игнорить, пропусти)
 git add README.md
 git commit -m "Add README.md with project description"
 git push origin main
 👉 Бро, я могу прямо сейчас оформить тебе красивый README с картинками/схемой сети, чтобы в GitHub смотрелось как документация. Хочешь?
-
-
-
-
-
-
-
-Вы сказали:
-Идеально давай!!! и запилим его в гит
-
-
-ChatGPT сказал:
-Красавчик, бро 🔥
-Делаем максимально красивый README.md, чтобы и документация, и визитка проекта.
 
 📌 Новый README.md
 markdown
@@ -137,15 +110,10 @@ voip-stack/
 ├── docker-compose.yml # запуск OpenVPN + Asterisk
 └── openvpn/ # здесь .ovpn профили клиентов (в .gitignore)
 
-yaml
-Копировать код
-
----
-
 ## 🔧 Установка
 
 ### 1. Установка Docker и Git
-```bash
+
 sudo apt update && sudo apt install -y git docker.io docker-compose
 sudo systemctl enable --now docker
 2. Клонирование проекта
@@ -189,7 +157,7 @@ Password: 1793
 🔍 Проверка работы
 Войти в Asterisk:
 
-bash
+```bash
 Копировать код
 docker exec -it asterisk asterisk -rvvv
 Посмотреть всех абонентов:
@@ -218,9 +186,6 @@ plaintext
                                    +-----------+
                                    | Asterisk  |
                                    | 3790/UDP  |
-                                   +-----------+
-yaml
-Копировать код
 
 ---
 
