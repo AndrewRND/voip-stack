@@ -1,30 +1,32 @@
-version: "3.8"
-
 services:
   openvpn:
     image: kylemanna/openvpn
     container_name: openvpn
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun
     ports:
       - "443:1194/tcp"
     volumes:
-      - ./openvpn:/etc/openvpn
+      - openvpn-data:/etc/openvpn
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "pgrep", "openvpn"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+    sysctls:
+      net.ipv6.conf.default.forwarding: 1
+      net.ipv6.conf.all.forwarding: 1
+    environment:
+      - EASYRSA_KEY_SIZE=4096
 
   asterisk:
     image: mlan/asterisk:base
     container_name: asterisk
     depends_on:
-      openvpn:
-        condition: service_healthy
+      - openvpn
     network_mode: "service:openvpn"
     volumes:
       - ./asterisk:/etc/asterisk
     restart: unless-stopped
+
+volumes:
+  openvpn-data:
+    external: true
