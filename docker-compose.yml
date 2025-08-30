@@ -32,10 +32,6 @@ services:
     network_mode: "service:openvpn"
     volumes:
       - ./asterisk:/etc/asterisk
-    ports:
-      - "3790:3790/udp"        # SIP UDP
-      - "4070:4070/tcp"        # SIP TLS
-      - "10000-20000:10000-20000/udp"   # RTP аудио
     restart: unless-stopped
 
 volumes:
